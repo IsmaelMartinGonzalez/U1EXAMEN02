@@ -9,27 +9,38 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-
         try {
-            String nameFile = "Prueba";
+            boolean exit = false;
             XmlManager manager = new XmlManager();
-            String op = JOptionPane.showInputDialog("Op?");
-            switch (op) {
-                case "1":
-                    manager.createXML("Prueba");
-                    break;
-                case "2":
-                    manager.inputData(nameFile,JOptionPane.showInputDialog("Code?"), "Juan", "Eso", "25/08/1999", "Cide");
-                    break;
-                case "3":
-                    manager.showAllXml(nameFile);
-                    break;
-                case "4":
-                    manager.modifyData(nameFile, JOptionPane.showInputDialog("Code?"));
-                    break;
 
+            while (!exit) {
+                String op = TextManager.mainMenu();
+                switch (op) {
+                    case "1":
+                        manager.createXML();
+                        break;
+                    case "2":
+                        manager.inputData();
+                        break;
+                    case "3":
+                        manager.showAllXml();
+                        break;
+                    case "4":
+                        manager.modifyData();
+                    case "5":
+                        manager.inquiries();
+                        break;
+                    case "6":
+                        manager.deletData();
+                        break;
+                    case "0":
+                        exit = true;
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "La opcion elegida no es correcta", "Error!", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
             }
-
 
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -43,6 +54,9 @@ public class Main {
             e.printStackTrace();
         } catch (TransformerException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return;
         }
     }
 }
