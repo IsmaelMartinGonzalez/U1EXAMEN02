@@ -3,19 +3,20 @@ import java.util.ArrayList;
 
 public class TextManager {
     public static String mainMenu() {
-        return JOptionPane.showInputDialog("***********************\n" +
-                "1.- Crear un ficheroXML\n" +
-                "2.- Introducir datos en el fichero XML\n" +
-                "3.- Mostrar el contenido del fichero XML\n" +
-                "4.- Modificar datos\n" +
-                "5.- Consultas\n" +
-                "6.-Eliminar un registro\n" +
-                "0.- Salir\n" +
-                "***********************");
+        return JOptionPane.showInputDialog("""
+                ***********************
+                1.- Crear un ficheroXML
+                2.- Introducir datos en el fichero XML
+                3.- Mostrar el contenido del fichero XML
+                4.- Modificar datos
+                5.- Consultas
+                6.-Eliminar un registro
+                0.- Salir
+                ***********************""");
     }
 
     public static ArrayList<String> inputDataText() {
-        ArrayList<String> datas = new ArrayList<String>();
+        ArrayList<String> datas = new ArrayList<>();
         String code = JOptionPane.showInputDialog("¿Codigo del alumno?");
         String studentName = JOptionPane.showInputDialog("¿Nombre del alumno?");
         String cours = JOptionPane.showInputDialog("¿Curso del alumno?");
@@ -31,36 +32,33 @@ public class TextManager {
 
     public static String modifyDataText() {
 
-        String data = JOptionPane.showInputDialog("¿Que dato deseas modificar?\n" +
-                "1.- Nombre del alumno\n" +
-                "2.- Curso del alumno\n" +
-                "3.- Año de nacimientodel alumno\n" +
-                "4.- Colegio del alumno");
-        switch (data) {
-            case "1":
-                data = "nom_alumne";
-                break;
-            case "2":
-                data = "curs";
-                break;
-            case "3":
-                data = "any_naixament";
-                break;
-            case "4":
-                data = "colegi";
-                break;
+        String data = JOptionPane.showInputDialog("""
+                ¿Que dato deseas modificar?
+                1.- Nombre del alumno
+                2.- Curso del alumno
+                3.- Año de nacimientodel alumno
+                4.- Colegio del alumno""");
+        if ("1".equals(data)) {
+            data = "nom_alumne";
+        } else if ("2".equals(data)) {
+            data = "curs";
+        } else if ("3".equals(data)) {
+            data = "any_naixament";
+        } else if ("4".equals(data)) {
+            data = "colegi";
         }
         return data;
     }
 
     public static String inquiriesText() {
-        return JOptionPane.showInputDialog("***********************\n" +
-                "1.- Consultar todos los nombre de los alumnos\n" +
-                "2.- Consultar los alumnos que vayan al colegio Cide\n" +
-                "3.- Consultar el nombre del alumno con codigo 3\n" +
-                "4.- Consultar los alumnos nacidos antes de 1990\n" +
-                "0.- Salir\n" +
-                "***********************");
+        return JOptionPane.showInputDialog("""
+                ***********************
+                1.- Consultar todos los nombre de los alumnos
+                2.- Consultar los alumnos que vayan al colegio Cide
+                3.- Consultar el nombre del alumno con codigo 3
+                4.- Consultar los alumnos nacidos antes de 1990
+                0.- Salir
+                ***********************""");
 
 
     }
