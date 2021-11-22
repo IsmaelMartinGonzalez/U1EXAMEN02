@@ -7,6 +7,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 
+//TODO Comprobar los errores que puedan surgir al introducir ID que no existen, el tipo de datos que no existen, en los menus elejir una opción que existe, que la feha sea un numero no negativo,
 public class Main {
     public static void main(String[] args) {
         try {
