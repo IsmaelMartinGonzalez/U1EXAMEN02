@@ -1,3 +1,8 @@
+/*
+  Author: Ismael
+  Desc: Clase encargada de gestionar el flujo de texto relacionada con la aplicacion.
+ */
+
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -46,7 +51,7 @@ public class TextManager {
             data = "any_naixament";
         } else if ("4".equals(data)) {
             data = "colegi";
-        }
+        } else data = null;
         return data;
     }
 

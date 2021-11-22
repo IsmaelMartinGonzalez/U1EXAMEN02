@@ -1,3 +1,7 @@
+/*
+  Author: Ismael
+  Desc: Clase principal que gestiona la aplicacion.
+ */
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -6,7 +10,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 
-//TODO Comprobar los errores que puedan surgir al introducir ID que no existen, el tipo de datos que no existen, en los menus elejir una opción que existe, que la feha sea un numero no negativo,
+//TODO Comprobar los errores que puedan surgir el tipo de datos que no existen, en los menus elejir una opción que existe,
 public class Main {
     public static void main(String[] args) {
         try {
@@ -27,6 +31,7 @@ public class Main {
                         break;
                     case "4":
                         manager.modifyData();
+                        break;
                     case "5":
                         manager.inquiries();
                         break;
