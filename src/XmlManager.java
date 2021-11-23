@@ -25,6 +25,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class XmlManager {
+
     //Atributos
     private final DocumentBuilder documentBuilder;
     private Document document;
@@ -37,9 +38,12 @@ public class XmlManager {
         this.documentBuilder = builderFactory.newDocumentBuilder();
     }
 
+    //Methods
+
     //Metodo encargado de crear un archivo XML.
     public void createXML() {
         String op;
+
         //Comprovamos si exixte el fichero alumnes.xml o no y preguntamos al usuario si desea sobreescribir o no
         if (new File("Alumnes.xml").exists()) {
             op = TextManager.fileExist();
@@ -113,32 +117,29 @@ public class XmlManager {
             //Recogemos todos los nodos del elemento raiz.
             NodeList nodes = root.getChildNodes();
 
-            //Pedimos el ID del alumno y el dato que se va ha canviar.
+            //Pedimos el ID del alumno.
             String code = JOptionPane.showInputDialog("¿Codigo del alumno?");
-            String data = TextManager.modifyDataText();
-            if (data != null) {
-                //Generamos un bucle para buscar el ID del almumno. En caso de no exitir se lanza un mensaje de error.
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    if (nodes.item(i).getAttributes().getNamedItem("codi_alumne").getNodeValue().equals(code)) {
-                        NodeList nodeList = nodes.item(i).getChildNodes();
-
+            for (int i = 0; i < nodes.getLength(); i++) {
+                if (nodes.item(i).getAttributes().getNamedItem("codi_alumne").getNodeValue().equals(code)) {
+                    NodeList nodeList = nodes.item(i).getChildNodes();
+                    //Pedimos el dato que se va ha canviar.
+                    String data = TextManager.modifyDataText();
+                    if (data != null) {
                         for (int j = 0; j < nodeList.getLength(); j++) {
                             if (nodeList.item(j).getNodeName().equals(data)) {
                                 String newData = JOptionPane.showInputDialog("Introduce el nuevo dato");
-
                                 nodeList.item(j).setTextContent(newData);
                                 saveFile();
                                 return;
                             }
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Opcion erronea", "ERROR!", JOptionPane.ERROR_MESSAGE);
+                        modifyData();
                     }
                 }
-                JOptionPane.showMessageDialog(null, "Codigo introducido inexistente", "ERROR!", JOptionPane.ERROR_MESSAGE);
-
-            } else {
-                JOptionPane.showMessageDialog(null, "Opcion erronea", "ERROR!", JOptionPane.ERROR_MESSAGE);
-                modifyData();
             }
+            JOptionPane.showMessageDialog(null, "Codigo introducido inexistente", "ERROR!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -147,30 +148,15 @@ public class XmlManager {
         //Cargamos el fichero.
         if (loadFile())
             return;
-        //Lo formateamos
-        format();
-        //Generamos un Xpath para poder lanzar consultas al archivo.
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        //Lanzamos otra consulta que nos lanzará que nos retorna todos los nodos del fichero.
-        String s = (String) xPath.evaluate("/*", document, XPathConstants.STRING);
         //Comprobamos que el fichero no este vacio.
         if (isregistry()) {
-            //Mostramos los datos del fichero.
-            JOptionPane.showMessageDialog(null, s);
+            //Lo formateamos
+            format();
+            //Generamos un Xpath para poder lanzar consultas al archivo.
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            //Lanzamos la consulta que nos retorna todos los nodos del fichero y mostramos los datos del fichero.
+            JOptionPane.showMessageDialog(null, xPath.evaluate("/*", document, XPathConstants.STRING));
         }
-//        for (int i = 0; i < nodes.getLength(); i++) {
-//            Element alumne = (Element) nodes.item(i);
-//            String f = (String) xPath.evaluate("nom_alumne", alumne, XPathConstants.STRING);
-//            String f2 = (String) xPath.evaluate("curs", alumne, XPathConstants.STRING);
-//            String f3 = (String) xPath.evaluate("any_naixament", alumne, XPathConstants.STRING);
-//            String f4 = (String) xPath.evaluate("colegi", alumne, XPathConstants.STRING);
-//            System.out.println("Nombre= " + f);
-//            System.out.println("Curso= " + f2);
-//            System.out.println("Año de nacimiento= " + f3);
-//            System.out.println("Colegio= " + f4);
-//            System.out.println("----------");
-//        }
-
     }
 
     //Metodo encargado de hacer consultas al XML y mostrar el resultado.
@@ -184,55 +170,45 @@ public class XmlManager {
             //Generamos una bandera, un Xpath y una lista de nodos para poder hacer las consultas necesarias.
             boolean exit = false;
             XPath xPath = XPathFactory.newInstance().newXPath();
-            NodeList nodes = (NodeList) xPath.evaluate("//alumne", document, XPathConstants.NODESET);
+            NodeList nodes;
             while (!exit) {
                 //Mostramos un menu de opciones y segun la elejida relizamos una consulta u otra.
                 String inquirie = TextManager.inquiriesText();
                 switch (inquirie) {
                     //Mostramos el nombre de todos los alumnos.
-                    case "1":
+                    case "1" -> {
+                        nodes = (NodeList) xPath.evaluate("//nom_alumne", document, XPathConstants.NODESET);
                         for (int i = 0; i < nodes.getLength(); i++) {
-                            Element alumne = (Element) nodes.item(i);
-                            JOptionPane.showMessageDialog(null, xPath.evaluate("nom_alumne", alumne, XPathConstants.STRING));
+                            JOptionPane.showMessageDialog(null, nodes.item(i).getTextContent());
                         }
-                        break;
+                    }
                     //MOstramos los alumnos que pertenecen al Cide.
-                    case "2":
+                    case "2" -> {
+                        nodes = (NodeList) xPath.evaluate("//alumne[colegi='cide']", document, XPathConstants.NODESET);
                         for (int i = 0; i < nodes.getLength(); i++) {
-                            Element alumne = (Element) nodes.item(i);
-                            String school = (String) xPath.evaluate("colegi", alumne, XPathConstants.STRING);
-                            if (school.equals("Cide") || school.equals("cide"))
-                                JOptionPane.showMessageDialog(null, xPath.evaluate("nom_alumne", alumne, XPathConstants.STRING));
+                            JOptionPane.showMessageDialog(null, nodes.item(i).getFirstChild().getTextContent());
                         }
-                        break;
+                    }
                     //Mostramos el alumno con ID=3.
-                    case "3":
-                        for (int i = 0; i < nodes.getLength(); i++) {
-                            Element alumne = (Element) nodes.item(i);
-                            if (alumne.getAttribute("codi_alumne").equals("3")) {
-                                JOptionPane.showMessageDialog(null, xPath.evaluate("nom_alumne", alumne, XPathConstants.STRING));
-                            }
+                    case "3" -> {
+                        Node node = (Node) xPath.evaluate("//alumne[@codi_alumne='3']", document, XPathConstants.NODE);
+                        if (node == null) {
+                            JOptionPane.showMessageDialog(null, "No hay alumno con codigo = 3");
+                        } else {
+                            JOptionPane.showMessageDialog(null, node.getFirstChild().getTextContent());
                         }
-                        break;
+                    }
                     //Mostramos todos los alumnos nacidos antes de 1990.
-                    case "4":
+                    case "4" -> {
+                        nodes = (NodeList) xPath.evaluate(" //alumne[any_naixament<=1990]", document, XPathConstants.NODESET);
                         for (int i = 0; i < nodes.getLength(); i++) {
-                            Element alumne = (Element) nodes.item(i);
-                            int intYear = Integer.parseInt((String) xPath.evaluate("any_naixament", alumne, XPathConstants.STRING));
-                            if (intYear <= 1990) {
-                                JOptionPane.showMessageDialog(null, "Alumo nacido antes de 1990: " + xPath.evaluate("nom_alumne", alumne, XPathConstants.STRING));
-                            }
+                            JOptionPane.showMessageDialog(null, "Alumo nacido antes de 1990: " + nodes.item(i).getFirstChild().getTextContent());
                         }
-                        break;
+                    }
                     //Permitimos la salida del bucle.
-                    case "0":
-                        exit = true;
-                        break;
-                    default:
-                        JOptionPane.showMessageDialog(null, "Opcion incorrecta");
-                        break;
+                    case "0" -> exit = true;
+                    default -> JOptionPane.showMessageDialog(null, "Opcion incorrecta");
                 }
-
             }
         }
     }

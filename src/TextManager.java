@@ -52,6 +52,7 @@ public class TextManager {
         } else if ("4".equals(data)) {
             data = "colegi";
         } else data = null;
+
         return data;
     }
 
