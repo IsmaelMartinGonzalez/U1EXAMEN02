@@ -53,7 +53,7 @@ public class XmlManager {
 
         //Si la opcion dada por el usuario es yes creamos el fichero alumnes.xml, si es no no hacemos nada.
         switch (op) {
-            case "Yes":
+            case "yes":
                 document = documentBuilder.newDocument();
                 root = document.createElement("registre_alumnes");
                 document.appendChild(root);
@@ -63,10 +63,10 @@ public class XmlManager {
                     JOptionPane.showInputDialog("Ha ocurrido un error al generar el XML");
                 }
                 break;
-            case "No":
+            case "no":
                 break;
             default:
-                JOptionPane.showMessageDialog(null, "Opcion errronea elija Yes o No", "Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Opcion errronea elija yes o no", "Error!", JOptionPane.ERROR_MESSAGE);
                 break;
         }
 
@@ -113,7 +113,7 @@ public class XmlManager {
         //Cargamos el XML
         if (loadFile())
             return;
-        if (isregistry()) {
+        if (registry()) {
             //Recogemos todos los nodos del elemento raiz.
             NodeList nodes = root.getChildNodes();
 
@@ -149,7 +149,7 @@ public class XmlManager {
         if (loadFile())
             return;
         //Comprobamos que el fichero no este vacio.
-        if (isregistry()) {
+        if (registry()) {
             //Lo formateamos
             format();
             //Generamos un Xpath para poder lanzar consultas al archivo.
@@ -166,7 +166,7 @@ public class XmlManager {
             return;
 
         //Si no hay registros en XML no se podrán hacer consultas
-        if (isregistry()) {
+        if (registry()) {
             //Generamos una bandera, un Xpath y una lista de nodos para poder hacer las consultas necesarias.
             boolean exit = false;
             XPath xPath = XPathFactory.newInstance().newXPath();
@@ -278,7 +278,7 @@ public class XmlManager {
     }
 
     //Metodo encargado de comprobar si hay registros en el fichero
-    private boolean isregistry() throws XPathExpressionException {
+    private boolean registry() throws XPathExpressionException {
         NodeList nodes = (NodeList) XPathFactory.newInstance().newXPath().evaluate("//alumne", document, XPathConstants.NODESET);
         if (nodes.getLength() == 0) {
             JOptionPane.showMessageDialog(null, "No hay registros");
